@@ -6,7 +6,9 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: eventuate-plugins-gradle-{{ checksum "gradle.properties" }}
+          keys:
+            - eventuate-plugins-gradle-{{ checksum "gradle.properties" }}
+            - eventuate-plugins-gradle-
       - run: TERM=dumb ./gradlew testClasses
       - save_cache:
           paths:

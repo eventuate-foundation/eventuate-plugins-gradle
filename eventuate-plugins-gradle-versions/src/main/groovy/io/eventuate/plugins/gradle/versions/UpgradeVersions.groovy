@@ -7,7 +7,6 @@ public class UpgradeVersions implements Plugin<Project> {
 
     @Override
     public void apply(Project project) {
-
         project.task("upgradeVersions", type: UpgradeVersionsTask)
     }
 }

@@ -1,0 +1,59 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+    }
+}
+
+allprojects {
+    group = "io.eventuate.plugins.gradle"
+}
+
+subprojects {
+  apply plugin: "groovy"
+  apply plugin: 'maven'
+  apply plugin: 'com.jfrog.bintray'
+
+  repositories {
+      mavenCentral()
+      jcenter()
+  }
+
+  dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+    compile "commons-io:commons-io:2.6"
+  }
+
+  bintray {
+      user = System.getenv('BINTRAY_USER')
+      key = System.getenv('BINTRAY_KEY')
+      configurations = ['archives']
+      pkg {
+          repo = "eventuate-maven-$bintrayRepoType"
+          name = 'eventuate-tram'
+          licenses = ['Apache-2.0']
+          vcsUrl = 'https://github.com/eventuate-tram/eventuate-tram-core'
+      }
+  }
+
+  uploadArchives {
+      repositories {
+          mavenDeployer {
+              repository(url: deployUrl)
+              pom.project {
+                  licenses {
+                      license {
+                          name 'The Apache Software License, Version 2.0'
+                          url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                          distribution 'repo'
+                      }
+                  }
+              }
+          }
+      }
+  }
+
+}

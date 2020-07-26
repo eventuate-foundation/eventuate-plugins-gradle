@@ -1,1 +1,2 @@
 include "eventuate-plugins-gradle-versions"
+include "eventuate-plugins-gradle-publish"

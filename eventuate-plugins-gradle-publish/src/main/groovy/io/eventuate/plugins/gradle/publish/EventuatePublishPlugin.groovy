@@ -53,7 +53,7 @@ class EventuatePublishPlugin implements Plugin<Project> {
                 key = System.getenv('BINTRAY_KEY')
                 configurations = ['archives']
                 pkg {
-                    repo = "eventuate-maven-$bintrayRepoType"
+                    repo = "eventuate-maven-${project.bintrayRepoType}"
                     name = project.bintrayPkgName
                     licenses = ['Apache-2.0']
                     vcsUrl = project.bintrayPkgVcsUrl

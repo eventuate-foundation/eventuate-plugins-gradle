@@ -41,6 +41,7 @@ class PublishEventuateArtifactsTask extends GradleBuild {
             sp.getProjectProperties().put("bintrayRepoType", bintrayRepoType)
             sp.getProjectProperties().put("deployUrl", "https://dl.bintray.com/eventuateio-oss/eventuate-maven-${bintrayRepoType}")
 
+            setStartParameter(sp)
             setTasks(["testClasses", "bintrayUpload"])
 
         }

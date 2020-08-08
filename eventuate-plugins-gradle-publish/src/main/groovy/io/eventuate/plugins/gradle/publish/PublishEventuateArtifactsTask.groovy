@@ -31,7 +31,7 @@ class PublishEventuateArtifactsTask extends GradleBuild {
             sp.getProjectProperties().put("deployUrl", System.getenv("S3_REPO_DEPLOY_URL"))
 
             setStartParameter(sp)
-            setTasks(["uploadArchives"])
+            setTasks(["publish"])
 
         } else {
 

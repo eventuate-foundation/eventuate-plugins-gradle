@@ -2,6 +2,7 @@ package io.eventuate.plugins.gradle.publish
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.publish.maven.MavenPublication
 
 class EventuatePublishPlugin implements Plugin<Project> {
 
@@ -11,47 +12,83 @@ class EventuatePublishPlugin implements Plugin<Project> {
 
         rootProject.allprojects { project ->
             apply plugin: 'java'
-            apply plugin: 'maven'
+            apply plugin: 'maven-publish'
             apply plugin: 'com.jfrog.bintray'
 
 
-            project.configurations {
-                deployerJars
-            }
-
-            project.dependencies {
-                deployerJars 'org.springframework.build:aws-maven:5.0.0.RELEASE'
-            }
-
             if (!project.name.endsWith("-bom")) {
 
-                project.uploadArchives {
-                    repositories {
-                        mavenDeployer {
-                            configuration = configurations.deployerJars
-                            repository(url: deployUrl) {
-                                authentication(userName: System.getenv('S3_REPO_AWS_ACCESS_KEY'), password: System.getenv('S3_REPO_AWS_SECRET_ACCESS_KEY'))
-                            }
-                            pom.project {
-                                licenses {
-                                    license {
-                                        name 'The Apache Software License, Version 2.0'
-                                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                                        distribution 'repo'
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                project.publishing {
+                      repositories {
 
+                          maven {
+                              url = project.deployUrl
+                              if (project.deployUrl.startsWith("s3"))
+                                  credentials(AwsCredentials) {
+                                      accessKey System.getenv('S3_REPO_AWS_ACCESS_KEY')
+                                      secretKey System.getenv('S3_REPO_AWS_SECRET_ACCESS_KEY')
+                                  }
+                          }
+                      }
+                      publications {
+                          maven(MavenPublication) {
+                              from components.java
+                              pom {
+                                  licenses {
+                                      license {
+                                          name = 'The Apache Software License, Version 2.0'
+                                          url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  }
+            } else {
+              project.publishing {
+                  repositories {
+
+                      maven {
+                          url = project.deployUrl
+                          if (project.deployUrl.startsWith("s3"))
+                              credentials(AwsCredentials) {
+                                  accessKey System.getenv('S3_REPO_AWS_ACCESS_KEY')
+                                  secretKey System.getenv('S3_REPO_AWS_SECRET_ACCESS_KEY')
+                              }
+                      }
+                  }
+                  publications {
+                      maven(MavenPublication) {
+                          pom {
+                              licenses {
+                                  license {
+                                      name = 'The Apache Software License, Version 2.0'
+                                      url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                                  }
+                              }
+                          }
+                          pom.withXml {
+                              def n = asNode().appendNode('dependencyManagement').appendNode('dependencies')
+
+                              project.parent.subprojects.sort { "$it.name" }.findAll { !it.name.endsWith("-bom") }.each { dep ->
+                                  def dependency = n.appendNode('dependency')
+                                  dependency.appendNode('groupId', project.group)
+                                  dependency.appendNode('artifactId', dep.name)
+                                  dependency.appendNode('version', project.version)
+                              }
+
+                              n
+                          }
+                      }
+                  }
+              }
             }
 
             project.bintray {
                 publish = true
                 user = System.getenv('BINTRAY_USER')
                 key = System.getenv('BINTRAY_KEY')
-                configurations = ['archives']
+                publications = ['maven']
                 pkg {
                     repo = "eventuate-maven-${project.bintrayRepoType}"
                     name = project.bintrayPkgName

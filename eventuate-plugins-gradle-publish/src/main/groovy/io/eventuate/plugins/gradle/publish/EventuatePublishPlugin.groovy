@@ -16,6 +16,7 @@ class EventuatePublishPlugin implements Plugin<Project> {
             apply plugin: 'maven-publish'
             apply plugin: 'com.jfrog.bintray'
 
+            def repoPrefix = project.hasProperty("bintrayRepoPrefix") ? project.bintrayRepoPrefix : "eventuate-maven"
 
             if (!project.name.endsWith("-bom")) {
 
@@ -91,7 +92,7 @@ class EventuatePublishPlugin implements Plugin<Project> {
                 key = System.getenv('BINTRAY_KEY')
                 publications = ['maven']
                 pkg {
-                    repo = "eventuate-maven-${project.bintrayRepoType}"
+                    repo = "${repoPrefix}-${project.bintrayRepoType}"
                     name = project.bintrayPkgName
                     licenses = ['Apache-2.0']
                     vcsUrl = project.bintrayPkgVcsUrl

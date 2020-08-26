@@ -36,13 +36,18 @@ class PublishEventuateArtifactsTask extends GradleBuild {
         } else {
 
             def bintrayRepoType = determineRepoType(branch)
-            def sp = new StartParameter()
-            sp.getProjectProperties().put("version", branch)
-            sp.getProjectProperties().put("bintrayRepoType", bintrayRepoType)
-            sp.getProjectProperties().put("deployUrl", "https://dl.bintray.com/eventuateio-oss/eventuate-maven-${bintrayRepoType}")
 
-            setStartParameter(sp)
-            setTasks(["testClasses", "bintrayUpload"])
+            if (bintrayRepoType == null) {
+              setTasks(["publish"])
+            } else {
+              def sp = new StartParameter()
+              sp.getProjectProperties().put("version", branch)
+              sp.getProjectProperties().put("bintrayRepoType", bintrayRepoType)
+              sp.getProjectProperties().put("deployUrl", "https://dl.bintray.com/eventuateio-oss/eventuate-maven-${bintrayRepoType}")
+
+              setStartParameter(sp)
+              setTasks(["testClasses", "bintrayUpload"])
+            }
 
         }
     }
@@ -54,6 +59,6 @@ class PublishEventuateArtifactsTask extends GradleBuild {
             return "milestone"
         if (branch ==~ /.*RC[0-9]+$/)
             return "rc"
-        throw new RuntimeException("cannot figure out bintray for this branch $branch")
+        return null;
     }
 }

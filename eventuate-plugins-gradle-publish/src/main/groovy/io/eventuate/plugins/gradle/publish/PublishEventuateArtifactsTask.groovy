@@ -26,11 +26,8 @@ class PublishEventuateArtifactsTask extends GradleBuild {
 
             def version = project.version.replace("-SNAPSHOT", ".BUILD-SNAPSHOT")
 
-            def sp = new StartParameter()
-            sp.getProjectProperties().put("version", version)
-            sp.getProjectProperties().put("deployUrl", System.getenv("S3_REPO_DEPLOY_URL"))
-
-            setStartParameter(sp)
+            startParameter.projectProperties = ["version" : version,
+                                "deployUrl" : System.getenv("S3_REPO_DEPLOY_URL")]
             setTasks(["publish"])
 
         } else {
@@ -40,12 +37,11 @@ class PublishEventuateArtifactsTask extends GradleBuild {
             if (bintrayRepoType == null) {
               setTasks(["publish"])
             } else {
-              def sp = new StartParameter()
-              sp.getProjectProperties().put("version", branch)
-              sp.getProjectProperties().put("bintrayRepoType", bintrayRepoType)
-              sp.getProjectProperties().put("deployUrl", "https://dl.bintray.com/eventuateio-oss/eventuate-maven-${bintrayRepoType}")
 
-              setStartParameter(sp)
+              startParameter.projectProperties = ["version" : branch,
+                                  "bintrayRepoType": bintrayRepoType,
+                                  "deployUrl" : "https://dl.bintray.com/eventuateio-oss/eventuate-maven-${bintrayRepoType}"]
+
               setTasks(["testClasses", "bintrayUpload"])
             }
 

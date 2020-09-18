@@ -5,22 +5,10 @@ import org.gradle.api.tasks.GradleBuild
 
 class PublishEventuateArtifactsTask extends GradleBuild {
 
-    def executeCommand(command) {
-        def lastLine = ""
-        def proc = command.execute()
-        proc.in.eachLine { line -> lastLine = line }
-        proc.err.eachLine { line -> println line }
-        proc.waitFor()
-        lastLine
-    }
-
-    def gitBranch() {
-        executeCommand("git rev-parse --abbrev-ref HEAD")
-    }
 
     PublishEventuateArtifactsTask() {
 
-        def branch = gitBranch()
+        def branch = GitBranchUtil.gitBranch()
 
         if (branch == "master") {
 
@@ -41,7 +29,7 @@ class PublishEventuateArtifactsTask extends GradleBuild {
 
         } else {
 
-            def bintrayRepoType = determineRepoType(branch)
+            def bintrayRepoType = GitBranchUtil.determineRepoType(branch)
 
             if (bintrayRepoType == null) {
               setTasks(["publish"])
@@ -57,13 +45,4 @@ class PublishEventuateArtifactsTask extends GradleBuild {
         }
     }
 
-    static String determineRepoType(String branch) {
-        if (branch ==~ /.*RELEASE$/)
-            return "release"
-        if (branch ==~ /.*M[0-9]+$/)
-            return "milestone"
-        if (branch ==~ /.*RC[0-9]+$/)
-            return "rc"
-        return null;
-    }
 }

@@ -12,9 +12,9 @@ class PublishEventuateDockerImagesTask extends GradleBuild {
       if (branch == "master") {
           setTasks(["publishComposeBuild"])
       } else if (branch.startsWith("wip-")) {
-          setTasks(["publishComposeBuild"])
+          startParameter.projectProperties = ["dockerImageTag" : GitBranchUtil.getWipPublishingVersion()]
+          setTasks(["publishComposeBuild", "publishComposePush"])
       } else {
-
           def bintrayRepoType = GitBranchUtil.determineRepoType(branch)
           if (bintrayRepoType == null) {
             setTasks(["publishComposeBuild"])

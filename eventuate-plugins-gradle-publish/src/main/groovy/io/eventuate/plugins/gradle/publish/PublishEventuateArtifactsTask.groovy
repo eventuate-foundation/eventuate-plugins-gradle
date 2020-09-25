@@ -18,12 +18,7 @@ class PublishEventuateArtifactsTask extends GradleBuild {
                                 "deployUrl" : System.getenv("S3_REPO_DEPLOY_URL")]
             setTasks(["publish"])
         } else if (branch.startsWith("wip-")) {
-
-            def suffix = branch.substring("wip-".length()).replace("-", "_").toUpperCase()
-
-            def version = project.version.replace("-SNAPSHOT", "." + suffix + ".BUILD-SNAPSHOT")
-
-            startParameter.projectProperties = ["version" : version,
+            startParameter.projectProperties = ["version" : GitBranchUtil.getWipPublishingVersion(),
                                 "deployUrl" : System.getenv("S3_REPO_DEPLOY_URL")]
             setTasks(["publish"])
 

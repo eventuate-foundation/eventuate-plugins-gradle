@@ -14,6 +14,11 @@ class GitBranchUtil {
       executeCommand("git rev-parse --abbrev-ref HEAD")
   }
 
+  static def getWipPublishingVersion() {
+      def suffix = getBranch().substring("wip-".length()).replace("-", "_").toUpperCase()
+      return getBranch().version.replace("-SNAPSHOT", "." + suffix + ".BUILD-SNAPSHOT")
+  }
+
   static String determineRepoType(String branch) {
       if (branch ==~ /.*RELEASE$/)
           return "release"

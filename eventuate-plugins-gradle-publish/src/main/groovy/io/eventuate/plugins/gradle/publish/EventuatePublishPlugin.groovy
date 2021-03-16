@@ -18,8 +18,8 @@ class EventuatePublishPlugin implements Plugin<Project> {
 
           rootProject.nexusStaging {
             packageGroup = "io.eventuate"
-            username = System.getenv('OSSRH_USERNAME')
-            password = System.getenv('OSSRH_PASSWORD')
+            username = GitBranchUtil.getenv('OSSRH_USERNAME')
+            password = GitBranchUtil.getenv('OSSRH_PASSWORD')
           }
 
         }
@@ -52,8 +52,8 @@ class EventuatePublishPlugin implements Plugin<Project> {
 
                           if (release) {
                             credentials(PasswordCredentials) {
-                              username = System.getenv('OSSRH_USERNAME')
-                              password = System.getenv('OSSRH_PASSWORD')
+                              username = GitBranchUtil.getenv('OSSRH_USERNAME')
+                              password = GitBranchUtil.getenv('OSSRH_PASSWORD')
                             }
 
 //                            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
@@ -62,8 +62,8 @@ class EventuatePublishPlugin implements Plugin<Project> {
                           } else
                             if (project.deployUrl.startsWith("s3"))
                                 credentials(AwsCredentials) {
-                                    accessKey System.getenv('S3_REPO_AWS_ACCESS_KEY')
-                                    secretKey System.getenv('S3_REPO_AWS_SECRET_ACCESS_KEY')
+                                    accessKey GitBranchUtil.getenv('S3_REPO_AWS_ACCESS_KEY')
+                                    secretKey GitBranchUtil.getenv('S3_REPO_AWS_SECRET_ACCESS_KEY')
                                 }
                       }
                   }

@@ -37,4 +37,11 @@ class GitBranchUtil {
     return executeCommand("git remote get-url origin")
   }
 
+  static String getenv(name) {
+    def v = System.getenv(name)
+    if (v == null)
+      throw new NullPointerException("Not defined: ${name}")
+    return v
+  }
+
 }

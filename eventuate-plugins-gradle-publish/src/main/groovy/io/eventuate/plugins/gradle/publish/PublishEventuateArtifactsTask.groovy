@@ -15,14 +15,14 @@ class PublishEventuateArtifactsTask extends GradleBuild {
             def version = project.version.replace("-SNAPSHOT", ".BUILD-SNAPSHOT")
 
             startParameter.projectProperties = ["version" : version,
-                                "deployUrl" : System.getenv("S3_SNAPSHOT_REPO_DEPLOY_URL")]
+                                "deployUrl" : GitBranchUtil.getenv("S3_SNAPSHOT_REPO_DEPLOY_URL")]
             setTasks(["publish"])
         } else if (branch.startsWith("wip-")) {
 
             // Publish <<SUFFIX>>...BUILD-SNAPSHOT
 
             startParameter.projectProperties = ["version" : GitBranchUtil.getWipPublishingVersion(project),
-                                "deployUrl" : System.getenv("S3_SNAPSHOT_REPO_DEPLOY_URL")]
+                                "deployUrl" : GitBranchUtil.getenv("S3_SNAPSHOT_REPO_DEPLOY_URL")]
             setTasks(["publish"])
 
         } else {
@@ -38,9 +38,9 @@ class PublishEventuateArtifactsTask extends GradleBuild {
             } else if (bintrayRepoType != null) {
 
               // rc or milestone
-              
+
               startParameter.projectProperties = ["version" : branch,
-                                  "deployUrl" : System.getenv("S3_${repoType.toUpperCase()}_REPO_DEPLOY_URL")]
+                                  "deployUrl" : GitBranchUtil.getenv("S3_${repoType.toUpperCase()}_REPO_DEPLOY_URL")]
 
               setTasks(["testClasses", "publish"])
 

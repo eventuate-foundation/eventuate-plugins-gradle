@@ -134,7 +134,8 @@ class EventuatePublishPlugin implements Plugin<Project> {
                 type: PublishEventuateArtifactsTask,
                 group: 'build setup',
                 description: "Publish Eventuate Artifacts")
-        publishTask.finalizedBy("closeAndReleaseRepository")
-
+        if (release) {
+          publishTask.finalizedBy("closeAndReleaseRepository")
+        }
     }
 }

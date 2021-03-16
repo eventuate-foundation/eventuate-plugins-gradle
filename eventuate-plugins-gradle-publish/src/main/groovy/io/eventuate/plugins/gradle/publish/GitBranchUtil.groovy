@@ -28,6 +28,13 @@ class GitBranchUtil {
           return "rc"
       return null;
   }
-  
+
+  static boolean isRelease() {
+    return "release" == determineRepoType(gitBranch())
+  }
+
+  static String getRemote() {
+    return executeCommand("git remote get-url origin")
+  }
 
 }

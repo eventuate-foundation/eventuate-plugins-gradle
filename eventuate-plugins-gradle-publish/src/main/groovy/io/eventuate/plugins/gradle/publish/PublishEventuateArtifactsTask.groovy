@@ -15,27 +15,37 @@ class PublishEventuateArtifactsTask extends GradleBuild {
             def version = project.version.replace("-SNAPSHOT", ".BUILD-SNAPSHOT")
 
             startParameter.projectProperties = ["version" : version,
-                                "deployUrl" : System.getenv("S3_REPO_DEPLOY_URL")]
+                                "deployUrl" : System.getenv("S3_SNAPSHOT_REPO_DEPLOY_URL")]
             setTasks(["publish"])
         } else if (branch.startsWith("wip-")) {
+
+            // Publish <<SUFFIX>>...BUILD-SNAPSHOT
+
             startParameter.projectProperties = ["version" : GitBranchUtil.getWipPublishingVersion(project),
-                                "deployUrl" : System.getenv("S3_REPO_DEPLOY_URL")]
+                                "deployUrl" : System.getenv("S3_SNAPSHOT_REPO_DEPLOY_URL")]
             setTasks(["publish"])
 
         } else {
 
             def bintrayRepoType = GitBranchUtil.determineRepoType(branch)
 
-            if (bintrayRepoType == null) {
-              setTasks(["publish"])
-            } else {
+            if (bintrayRepoType == "release") {
 
               startParameter.projectProperties = ["version" : branch,
-                                  "bintrayRepoType": bintrayRepoType,
-                                  "deployUrl" : "https://dl.bintray.com/eventuateio-oss/eventuate-maven-${bintrayRepoType}"]
+                                  "deployUrl" : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"]
 
-              setTasks(["testClasses", "bintrayUpload"])
-            }
+              setTasks(["testClasses", "publish"])
+            } else if (bintrayRepoType != null) {
+
+              // rc or milestone
+              
+              startParameter.projectProperties = ["version" : branch,
+                                  "deployUrl" : System.getenv("S3_${repoType.toUpperCase()}_REPO_DEPLOY_URL")]
+
+              setTasks(["testClasses", "publish"])
+
+            } else
+              throw new RuntimeException("Don't know what to do with: " + branch)
 
         }
     }

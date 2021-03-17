@@ -30,5 +30,5 @@ workflows:
   build-test-and-deploy:
     jobs:
       - build:
-          contexts:
+          context:
             - publish

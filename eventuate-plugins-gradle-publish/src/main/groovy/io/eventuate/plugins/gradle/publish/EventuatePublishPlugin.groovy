@@ -24,6 +24,8 @@ class EventuatePublishPlugin implements Plugin<Project> {
 
         }
 
+        print("project.deployUrl=${rootProject.deployUrl}")
+
         rootProject.allprojects { project ->
             apply plugin: 'java'
 

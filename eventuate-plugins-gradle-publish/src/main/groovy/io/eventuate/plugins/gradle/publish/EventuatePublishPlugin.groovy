@@ -24,10 +24,14 @@ class EventuatePublishPlugin implements Plugin<Project> {
 
         }
 
-        print("project.deployUrl=${rootProject.deployUrl}")
+        println("project.deployUrl=${rootProject.deployUrl}")
+        println("project.deployUrl=${rootProject.deployUrl.substring(0,3)}")
 
         rootProject.allprojects { project ->
             apply plugin: 'java'
+
+            println("project.deployUrl=${project.deployUrl}")
+            println("project.deployUrl=${project.deployUrl.substring(0,3)}")
 
             if (release) {
               apply plugin: 'signing'

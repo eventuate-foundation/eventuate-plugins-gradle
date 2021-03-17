@@ -40,7 +40,7 @@ class GitBranchUtil {
   static String getenv(name) {
     def v = System.getenv(name)
     if (v == null)
-      throw new NullPointerException("Not defined: ${name}")
+      println("Not defined: ${name}")
     return v
   }
 

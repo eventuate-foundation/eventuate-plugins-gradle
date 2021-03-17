@@ -16,7 +16,7 @@ class PublishEventuateArtifactsTask extends GradleBuild {
 
             startParameter.projectProperties = ["version" : version,
                                 "deployUrl" : GitBranchUtil.getenv("S3_SNAPSHOT_REPO_DEPLOY_URL")]
-            setTasks(["publish"])
+            setTasks(["testClasses", "publish"])
         } else if (branch.startsWith("wip-")) {
 
             // Publish <<SUFFIX>>...BUILD-SNAPSHOT

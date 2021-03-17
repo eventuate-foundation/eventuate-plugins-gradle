@@ -24,14 +24,8 @@ class EventuatePublishPlugin implements Plugin<Project> {
 
         }
 
-        println("project.deployUrl=${rootProject.deployUrl}")
-        println("project.deployUrl=${rootProject.deployUrl.substring(0,3)}")
-
         rootProject.allprojects { project ->
             apply plugin: 'java'
-
-            println("project.deployUrl=${project.deployUrl}")
-            println("project.deployUrl=${project.deployUrl.substring(0,3)}")
 
             if (release) {
               apply plugin: 'signing'
@@ -78,7 +72,7 @@ class EventuatePublishPlugin implements Plugin<Project> {
                           from components.java
                           pom {
                               name = project.name
-                              description = "An eventuate project"
+                              description = "An Eventuate project"
                               url = "https://eventuate.io"
                               licenses {
                                   license {
@@ -103,23 +97,27 @@ class EventuatePublishPlugin implements Plugin<Project> {
                                 developerConnection = "scm:git:ssh://github.com:${remote}"
                                 url =                 "http://github.com/${remoteSansSuffix}/tree/master"
                               }
+
+                              if (project.name.endsWith("-bom")) {
+
+                                packaging = "pom"
+
+                                pom.withXml {
+                                    def n = asNode().appendNode('dependencyManagement').appendNode('dependencies')
+
+                                    project.parent.subprojects.sort { "$it.name" }.findAll { !it.name.endsWith("-bom") }.each { dep ->
+                                        def dependency = n.appendNode('dependency')
+                                        dependency.appendNode('groupId', project.group)
+                                        dependency.appendNode('artifactId', dep.name)
+                                        dependency.appendNode('version', project.version)
+                                    }
+
+                                    n
+                                }
+                              }
                           }
                       }
 
-                      if (project.name.endsWith("-bom")) {
-                        pom.withXml {
-                            def n = asNode().appendNode('dependencyManagement').appendNode('dependencies')
-
-                            project.parent.subprojects.sort { "$it.name" }.findAll { !it.name.endsWith("-bom") }.each { dep ->
-                                def dependency = n.appendNode('dependency')
-                                dependency.appendNode('groupId', project.group)
-                                dependency.appendNode('artifactId', dep.name)
-                                dependency.appendNode('version', project.version)
-                            }
-
-                            n
-                        }
-                      }
 
                   }
               }

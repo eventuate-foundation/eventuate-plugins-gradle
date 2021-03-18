@@ -70,6 +70,15 @@ class EventuatePublishPlugin implements Plugin<Project> {
                   publications {
                       maven(MavenPublication) {
                           from components.java
+
+                          versionMapping {
+                               usage('java-api') {
+                                   fromResolutionOf('runtimeClasspath')
+                               }
+                               usage('java-runtime') {
+                                   fromResolutionResult()
+                               }
+                          }
                           pom {
                               name = project.name
                               description = "An Eventuate project"

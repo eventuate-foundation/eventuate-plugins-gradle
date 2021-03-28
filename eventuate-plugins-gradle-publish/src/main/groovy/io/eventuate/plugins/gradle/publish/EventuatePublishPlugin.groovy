@@ -150,5 +150,10 @@ class EventuatePublishPlugin implements Plugin<Project> {
         if (release) {
           publishTask.finalizedBy("closeAndReleaseRepository")
         }
+
+        rootProject.task("waitForMavenCentral",
+                type: WaitForMavenCentralTask,
+                group: 'build setup',
+                description: "Wait for Maven Central")
     }
 }

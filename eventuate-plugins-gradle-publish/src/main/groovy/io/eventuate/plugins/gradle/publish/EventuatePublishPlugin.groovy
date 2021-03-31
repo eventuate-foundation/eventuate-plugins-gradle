@@ -25,7 +25,14 @@ class EventuatePublishPlugin implements Plugin<Project> {
         }
 
         rootProject.allprojects { project ->
-            apply plugin: 'java'
+
+            if (!GitBranchUtil.isPlatform(rootProject)) {
+              apply plugin: 'java'
+              project.java {
+                  withJavadocJar()
+                  withSourcesJar()
+              }
+            }
 
             if (release) {
               apply plugin: 'signing'
@@ -35,10 +42,6 @@ class EventuatePublishPlugin implements Plugin<Project> {
 
             def repoPrefix = project.hasProperty("bintrayRepoPrefix") ? project.bintrayRepoPrefix : "eventuate-maven"
 
-            project.java {
-                withJavadocJar()
-                withSourcesJar()
-            }
 
             project.publishing {
                   repositories {
@@ -69,16 +72,21 @@ class EventuatePublishPlugin implements Plugin<Project> {
                   }
                   publications {
                       maven(MavenPublication) {
-                          from components.java
 
-                          versionMapping {
-                               usage('java-api') {
-                                   fromResolutionOf('runtimeClasspath')
-                               }
-                               usage('java-runtime') {
-                                   fromResolutionResult()
-                               }
+                          if (GitBranchUtil.isPlatform(rootProject))
+                            from components.javaPlatform
+                          else {
+                            from components.java                          
+                            versionMapping {
+                                 usage('java-api') {
+                                     fromResolutionOf('runtimeClasspath')
+                                 }
+                                 usage('java-runtime') {
+                                     fromResolutionResult()
+                                 }
+                            }
                           }
+
                           pom {
                               name = project.name
                               description = "An Eventuate project"

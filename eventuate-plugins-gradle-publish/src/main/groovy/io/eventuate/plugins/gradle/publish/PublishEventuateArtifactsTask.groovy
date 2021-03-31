@@ -10,13 +10,18 @@ class PublishEventuateArtifactsTask extends GradleBuild {
 
         def branch = GitBranchUtil.gitBranch()
 
+        def tasks = ["testClasses", "publish"]
+
+        if (GitBranchUtil.isPlatform(project))
+          tasks = ["publish"]
+
         if (branch == "master") {
 
             def version = project.version.replace("-SNAPSHOT", ".BUILD-SNAPSHOT")
 
             startParameter.projectProperties = ["version" : version,
                                 "deployUrl" : GitBranchUtil.getenv("S3_SNAPSHOT_REPO_DEPLOY_URL")]
-            setTasks(["testClasses", "publish"])
+            setTasks(tasks)
         } else if (branch.startsWith("wip-")) {
 
             // Publish <<SUFFIX>>...BUILD-SNAPSHOT
@@ -34,7 +39,7 @@ class PublishEventuateArtifactsTask extends GradleBuild {
               startParameter.projectProperties = ["version" : branch,
                                   "deployUrl" : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"]
 
-              setTasks(["testClasses", "publish"])
+              setTasks(tasks)
             } else if (bintrayRepoType != null) {
 
               // rc or milestone
@@ -42,7 +47,7 @@ class PublishEventuateArtifactsTask extends GradleBuild {
               startParameter.projectProperties = ["version" : branch,
                                   "deployUrl" : GitBranchUtil.getenv("S3_${repoType.toUpperCase()}_REPO_DEPLOY_URL")]
 
-              setTasks(["testClasses", "publish"])
+              setTasks(tasks)
 
             } else
               throw new RuntimeException("Don't know what to do with: " + branch)

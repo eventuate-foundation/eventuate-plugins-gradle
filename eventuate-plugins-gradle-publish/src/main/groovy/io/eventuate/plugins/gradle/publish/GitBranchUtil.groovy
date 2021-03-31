@@ -10,6 +10,10 @@ class GitBranchUtil {
       lastLine
   }
 
+  static def isPlatform(project) {
+      project.name == "eventuate-platform-dependencies"
+  }
+
   static def gitBranch() {
       executeCommand("git rev-parse --abbrev-ref HEAD")
   }

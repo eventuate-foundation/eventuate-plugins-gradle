@@ -26,12 +26,14 @@ class EventuatePublishPlugin implements Plugin<Project> {
 
         rootProject.allprojects { project ->
 
-            if (!GitBranchUtil.isPlatform(rootProject)) {
+            if (!GitBranchUtil.isPlatform(project)) {
               apply plugin: 'java'
               project.java {
                   withJavadocJar()
                   withSourcesJar()
               }
+            } else {
+              apply plugin: 'java-platform'
             }
 
             if (release) {
@@ -73,10 +75,10 @@ class EventuatePublishPlugin implements Plugin<Project> {
                   publications {
                       maven(MavenPublication) {
 
-                          if (GitBranchUtil.isPlatform(rootProject))
+                          if (GitBranchUtil.isPlatform(project))
                             from components.javaPlatform
                           else {
-                            from components.java                          
+                            from components.java
                             versionMapping {
                                  usage('java-api') {
                                      fromResolutionOf('runtimeClasspath')
@@ -114,29 +116,22 @@ class EventuatePublishPlugin implements Plugin<Project> {
                                 developerConnection = "scm:git:ssh://github.com:${remote}"
                                 url =                 "http://github.com/${remoteSansSuffix}/tree/master"
                               }
-
-                              if (project.name.endsWith("-bom")) {
-
-                                packaging = "pom"
-
-                                pom.withXml {
-                                    def n = asNode().appendNode('dependencyManagement').appendNode('dependencies')
-
-                                    project.parent.subprojects.sort { "$it.name" }.findAll { !it.name.endsWith("-bom") }.each { dep ->
-                                        def dependency = n.appendNode('dependency')
-                                        dependency.appendNode('groupId', project.group)
-                                        dependency.appendNode('artifactId', dep.name)
-                                        dependency.appendNode('version', project.version)
-                                    }
-
-                                    n
-                                }
-                              }
                           }
                       }
 
 
                   }
+              }
+
+              if (GitBranchUtil.isPlatformSubmodule(project)) {
+                project.dependencies {
+                    constraints {
+                        rootProject.subprojects.collect {
+                          if (it != project)
+                            api it
+                        }
+                    }
+                }
               }
 
               if (release) {

@@ -11,7 +11,11 @@ class GitBranchUtil {
   }
 
   static def isPlatform(project) {
-      project.name == "eventuate-platform-dependencies"
+      project.name == "eventuate-platform-dependencies" || isPlatformSubmodule(project)
+  }
+
+  static def isPlatformSubmodule(project) {
+      project.name.endsWith("-bom")
   }
 
   static def gitBranch() {

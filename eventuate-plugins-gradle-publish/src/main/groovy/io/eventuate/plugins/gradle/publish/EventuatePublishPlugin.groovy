@@ -14,13 +14,7 @@ class EventuatePublishPlugin implements Plugin<Project> {
         def release = GitBranchUtil.isRelease()
 
         if (release) {
-          rootProject.apply plugin: 'io.codearte.nexus-staging'
-
-          rootProject.nexusStaging {
-            packageGroup = "io.eventuate"
-            username = GitBranchUtil.getenv('OSSRH_USERNAME')
-            password = GitBranchUtil.getenv('OSSRH_PASSWORD')
-          }
+          rootProject.apply plugin: 'io.github.gradle-nexus.publish-plugin'
 
         }
 
@@ -123,6 +117,8 @@ class EventuatePublishPlugin implements Plugin<Project> {
                   }
               }
 
+
+
               if (GitBranchUtil.isPlatformSubmodule(project)) {
                 project.dependencies {
                     constraints {
@@ -146,13 +142,21 @@ class EventuatePublishPlugin implements Plugin<Project> {
 
         }
 
+        if (release) {
+          rootProject.nexusPublishing {
+            repositories {
+                sonatype {
+                    username = GitBranchUtil.getenv('OSSRH_USERNAME')
+                    password = GitBranchUtil.getenv('OSSRH_PASSWORD')
+                }
+            }
+          }
+        }
+
         def publishTask = rootProject.task("publishEventuateArtifacts",
                 type: PublishEventuateArtifactsTask,
                 group: 'build setup',
                 description: "Publish Eventuate Artifacts")
-        if (release) {
-          publishTask.finalizedBy("closeAndReleaseRepository")
-        }
 
         rootProject.task("waitForMavenCentral",
                 type: WaitForMavenCentralTask,

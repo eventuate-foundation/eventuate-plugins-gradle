@@ -36,8 +36,15 @@ class PublishEventuateArtifactsTask extends GradleBuild {
 
             if (bintrayRepoType == "release") {
 
+              // TODO deployUrl unused
+
               startParameter.projectProperties = ["version" : branch,
                                   "deployUrl" : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"]
+
+
+              tasks.removeLast()
+              tasks.add("publishToSonatype")
+              tasks.add("closeAndReleaseSonatypeStagingRepository")
 
               setTasks(tasks)
             } else if (bintrayRepoType != null) {

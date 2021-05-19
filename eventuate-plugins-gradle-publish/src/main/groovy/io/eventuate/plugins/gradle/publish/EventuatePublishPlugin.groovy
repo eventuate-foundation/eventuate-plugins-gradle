@@ -14,8 +14,7 @@ class EventuatePublishPlugin implements Plugin<Project> {
         def release = GitBranchUtil.isRelease()
 
         if (release) {
-          rootProject.apply plugin: 'io.github.gradle-nexus.publish-plugin'
-
+          rootProject.plugins.apply('io.github.gradle-nexus.publish-plugin')
         }
 
         rootProject.allprojects { project ->
@@ -146,6 +145,8 @@ class EventuatePublishPlugin implements Plugin<Project> {
           rootProject.nexusPublishing {
             repositories {
                 sonatype {
+                    if (rootProject.hasProperty("nexusUrl"))
+                      nexusUrl.set(new URI(rootProject.nexusUrl))
                     username = GitBranchUtil.getenv('OSSRH_USERNAME')
                     password = GitBranchUtil.getenv('OSSRH_PASSWORD')
                 }

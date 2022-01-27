@@ -7,7 +7,7 @@ class PublishEventuateDockerImagesTask extends GradleBuild {
 
   PublishEventuateDockerImagesTask() {
 
-      def branch = GitBranchUtil.gitBranch()
+      def branch = GitBranchUtil.gitBranch(project)
 
       if (branch == "master") {
           def version = project.version.replace("-SNAPSHOT", ".BUILD-SNAPSHOT")

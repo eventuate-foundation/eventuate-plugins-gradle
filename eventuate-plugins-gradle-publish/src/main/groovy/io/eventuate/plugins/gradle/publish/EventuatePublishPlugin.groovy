@@ -11,7 +11,7 @@ class EventuatePublishPlugin implements Plugin<Project> {
 
     void apply(Project rootProject) {
 
-        def release = GitBranchUtil.isRelease()
+        def release = GitBranchUtil.isRelease(rootProject)
 
         if (release) {
           rootProject.plugins.apply('io.github.gradle-nexus.publish-plugin')
@@ -19,7 +19,7 @@ class EventuatePublishPlugin implements Plugin<Project> {
 
         rootProject.allprojects { project ->
 
-            if (!GitBranchUtil.isPlatform(project)) {
+            if (!GitBranchUtil.isPlatform(rootProject)) {
               apply plugin: 'java'
               project.java {
                   withJavadocJar()
@@ -68,7 +68,7 @@ class EventuatePublishPlugin implements Plugin<Project> {
                   publications {
                       maven(MavenPublication) {
 
-                          if (GitBranchUtil.isPlatform(project))
+                          if (GitBranchUtil.isPlatform(rootProject))
                             from components.javaPlatform
                           else {
                             from components.java
@@ -103,7 +103,7 @@ class EventuatePublishPlugin implements Plugin<Project> {
                               }
 
                               scm {
-                                def remote = GitBranchUtil.getRemote().replace("git@github.com:", "")  // git@github.com:eventuate-foundation/eventuate-plugins-gradle.git
+                                def remote = GitBranchUtil.getRemote(project).replace("git@github.com:", "")  // git@github.com:eventuate-foundation/eventuate-plugins-gradle.git
                                 def remoteSansSuffix = remote.replace(".git", "")
                                 connection =          "scm:git:git://github.com/${remote}"
                                 developerConnection = "scm:git:ssh://github.com:${remote}"
@@ -118,7 +118,7 @@ class EventuatePublishPlugin implements Plugin<Project> {
 
 
 
-              if (GitBranchUtil.isPlatformSubmodule(project)) {
+              if (GitBranchUtil.isPlatformSubmodule(rootProject)) {
                 project.dependencies {
                     constraints {
                         rootProject.subprojects.collect {

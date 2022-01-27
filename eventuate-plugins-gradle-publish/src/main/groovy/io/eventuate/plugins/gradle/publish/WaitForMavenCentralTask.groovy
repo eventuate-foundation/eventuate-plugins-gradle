@@ -10,7 +10,7 @@ class WaitForMavenCentralTask extends DefaultTask {
 
         def group = project.group
         def artifact = project.name
-        def version = project.findProperty('waitForVersion') ?: GitBranchUtil.gitBranch()
+        def version = project.findProperty('waitForVersion') ?: GitBranchUtil.gitBranch(project)
         def url = "https://repo1.maven.org/maven2/${group.replace('.', '/')}/${artifact}/maven-metadata.xml"
 
         while(true) {

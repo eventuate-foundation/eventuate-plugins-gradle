@@ -5,7 +5,7 @@ class GitBranchUtil {
       def lastLine = ""
       def proc = command.execute()
       proc.in.eachLine { line -> lastLine = line }
-      proc.err.eachLine { line -> println line }
+      proc.err.eachLine { line -> print line}
       proc.waitFor()
       lastLine
   }
@@ -18,12 +18,12 @@ class GitBranchUtil {
       project.name.endsWith("-bom")
   }
 
-  static def gitBranch() {
-      executeCommand("git rev-parse --abbrev-ref HEAD")
+  static def gitBranch(project) {
+      return executeCommand("git -C  ${project.rootDir} rev-parse --abbrev-ref HEAD")
   }
 
   static def getWipPublishingVersion(project) {
-      def suffix = gitBranch().substring("wip-".length()).replace("-", "_").toUpperCase()
+      def suffix = gitBranch(project).substring("wip-".length()).replace("-", "_").toUpperCase()
       return project.version.replace("-SNAPSHOT", "." + suffix + ".BUILD-SNAPSHOT")
   }
 
@@ -37,12 +37,12 @@ class GitBranchUtil {
       return null;
   }
 
-  static boolean isRelease() {
-    return "release" == determineRepoType(gitBranch())
+  static boolean isRelease(project) {
+    return "release" == determineRepoType(gitBranch(project))
   }
 
-  static String getRemote() {
-    return executeCommand("git remote get-url origin")
+  static String getRemote(project) {
+    return executeCommand("git -C ${project.rootDir} remote get-url origin")
   }
 
   static String getenv(name) {

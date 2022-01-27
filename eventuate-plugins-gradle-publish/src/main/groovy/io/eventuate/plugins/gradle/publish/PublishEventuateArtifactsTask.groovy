@@ -8,7 +8,7 @@ class PublishEventuateArtifactsTask extends GradleBuild {
 
     PublishEventuateArtifactsTask() {
 
-        def branch = GitBranchUtil.gitBranch()
+        def branch = GitBranchUtil.gitBranch(project)
 
         def tasks = ["testClasses", "publish"]
 
@@ -57,7 +57,7 @@ class PublishEventuateArtifactsTask extends GradleBuild {
               setTasks(tasks)
 
             } else
-              throw new RuntimeException("Don't know what to do with: " + branch)
+              throw new RuntimeException("Don't know what to do with branch: <" + branch + ">")
 
         }
     }

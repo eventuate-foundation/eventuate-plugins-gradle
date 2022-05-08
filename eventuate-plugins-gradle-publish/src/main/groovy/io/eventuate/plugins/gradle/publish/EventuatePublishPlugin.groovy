@@ -19,7 +19,7 @@ class EventuatePublishPlugin implements Plugin<Project> {
 
         rootProject.allprojects { project ->
 
-            if (!GitBranchUtil.isPlatform(rootProject)) {
+            if (!GitBranchUtil.isPlatform(project)) {
               apply plugin: 'java'
               project.java {
                   withJavadocJar()
@@ -68,7 +68,7 @@ class EventuatePublishPlugin implements Plugin<Project> {
                   publications {
                       maven(MavenPublication) {
 
-                          if (GitBranchUtil.isPlatform(rootProject))
+                          if (GitBranchUtil.isPlatform(project))
                             from components.javaPlatform
                           else {
                             from components.java

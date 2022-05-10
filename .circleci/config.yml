@@ -2,19 +2,19 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/openjdk:8u212-b04-stretch
+      - image: cimg/openjdk:8.0.322
     working_directory: ~/eventuate-plugins-gradle
     steps:
       - checkout
       - restore_cache:
           keys:
-            - eventuate-plugins-gradle-{{ checksum "gradle.properties" }}
+            - eventuate-plugins-gradle-{{ checksum "gradle.properties" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
             - eventuate-plugins-gradle-
       - run: TERM=dumb ./gradlew testClasses
       - save_cache:
           paths:
             - ~/.gradle
-          key: eventuate-plugins-gradle-{{ checksum "gradle.properties" }}
+          key: eventuate-plugins-gradle-{{ checksum "gradle.properties" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
       - run: TERM=dumb ./gradlew build
       - store_test_results:
           path: ~/junit
@@ -23,7 +23,7 @@ jobs:
       - run:
           name: Publish artifacts
           command: |
-            TERM=dumb ./deploy-artifacts.sh
+            TERM=dumb ./gradlew publishEventuateArtifacts
           when: on_success
 workflows:
   version: 2

@@ -1,0 +1,17 @@
+
+subprojects {
+  apply plugin: "java"
+
+  repositories {
+    maven {
+      url repoUrl
+    }
+  }
+
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
+
+  dependencies {
+    implementation(platform("io.eventuate.plugins.gradle.testproject:test-project-bom:1.0-SNAPSHOT"))
+  }
+}

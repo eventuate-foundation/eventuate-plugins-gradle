@@ -29,6 +29,31 @@ allprojects {
         testCompile "org.mockito:mockito-core:2.23.4"
     }
 
-
-
 }
+
+def testRepoDir = "${rootProject.buildDir}/testdeploy"
+def testRepoUrl="file://$testRepoDir"
+
+task deleteTestRepo(type: Delete) {
+    delete testRepoDir
+}
+
+
+task publishTestLibraryProject(type: GradleBuild) {
+    dependsOn(deleteTestRepo)
+    dir = file('test-library-project')
+    tasks = ['publish']
+    startParameter.projectProperties = [deployUrl: testRepoUrl]
+}
+
+task buildTestClient(type: GradleBuild) {
+    dependsOn(publishTestLibraryProject)
+    dir = file('test-client-project')
+    tasks = ['assemble']
+    startParameter.refreshDependencies = true
+    startParameter.projectProperties = [repoUrl: testRepoUrl]
+}
+
+check.dependsOn(buildTestClient)
+
+

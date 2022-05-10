@@ -118,7 +118,7 @@ class EventuatePublishPlugin implements Plugin<Project> {
 
 
 
-              if (GitBranchUtil.isPlatformSubmodule(rootProject)) {
+              if (GitBranchUtil.isPlatformSubmodule(project)) {
                 project.dependencies {
                     constraints {
                         rootProject.subprojects.collect {

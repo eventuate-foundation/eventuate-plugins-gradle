@@ -1,0 +1,4 @@
+dependencies {
+  implementation "io.eventuate.plugins.gradle.testproject:service"
+
+}

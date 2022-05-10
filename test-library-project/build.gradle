@@ -1,0 +1,7 @@
+
+apply plugin: io.eventuate.plugins.gradle.publish.EventuatePublishPlugin
+
+allprojects {
+    group = "io.eventuate.plugins.gradle.testproject"
+    version = "1.0-SNAPSHOT"
+}

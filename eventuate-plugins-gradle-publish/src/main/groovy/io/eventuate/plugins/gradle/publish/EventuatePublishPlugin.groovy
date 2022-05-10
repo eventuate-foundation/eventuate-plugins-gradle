@@ -35,9 +35,6 @@ class EventuatePublishPlugin implements Plugin<Project> {
 
             apply plugin: 'maven-publish'
 
-            def repoPrefix = project.hasProperty("bintrayRepoPrefix") ? project.bintrayRepoPrefix : "eventuate-maven"
-
-
             project.publishing {
                   repositories {
 
@@ -49,11 +46,12 @@ class EventuatePublishPlugin implements Plugin<Project> {
                           url = project.deployUrl
 
                           if (release) {
-                            credentials(PasswordCredentials) {
-                              username = GitBranchUtil.getenv('OSSRH_USERNAME')
-                              password = GitBranchUtil.getenv('OSSRH_PASSWORD')
-                            }
-
+                              if (!project.deployUrl.startsWith("file")) {
+                                  credentials(PasswordCredentials) {
+                                      username = GitBranchUtil.getenv('OSSRH_USERNAME')
+                                      password = GitBranchUtil.getenv('OSSRH_PASSWORD')
+                                  }
+                              }
 //                            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
 //                              authentication(userName: ossrhUsername, password: ossrhPassword)
 //                            }

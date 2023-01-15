@@ -1,6 +1,5 @@
 package io.eventuate.plugins.gradle.publish
 
-import org.gradle.StartParameter
 import org.gradle.api.tasks.GradleBuild
 
 class PublishEventuateDockerImagesTask extends GradleBuild {
@@ -12,7 +11,7 @@ class PublishEventuateDockerImagesTask extends GradleBuild {
       if (branch == "master") {
           def version = project.version.replace("-SNAPSHOT", ".BUILD-SNAPSHOT")
           startParameter.projectProperties = ["dockerImageTag" : version, "version" : version]
-          setTasks(["publishComposeBuild", , "publishComposePush"])
+          setTasks(["publishComposeBuild", "publishComposePush"])
       } else if (branch.startsWith("wip-")) {
           def version = GitBranchUtil.getWipPublishingVersion(project)
           startParameter.projectProperties = ["dockerImageTag" : version, "version" : version]

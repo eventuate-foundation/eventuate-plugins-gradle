@@ -15,7 +15,7 @@ class PublishEventuateArtifactsTask extends GradleBuild {
         if (GitBranchUtil.isPlatform(project))
           tasks = ["publish"]
 
-        if (branch == "master") {
+        if (GitBranchUtil.isTrunk(branch)) {
 
             def version = project.version.replace("-SNAPSHOT", ".BUILD-SNAPSHOT")
 

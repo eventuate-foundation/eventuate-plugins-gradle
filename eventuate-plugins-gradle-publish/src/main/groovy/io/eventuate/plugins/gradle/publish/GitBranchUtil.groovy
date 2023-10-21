@@ -52,4 +52,8 @@ class GitBranchUtil {
     return v
   }
 
+  static isTrunk(branch) {
+    return branch == "master" || branch == "main"
+  }
+
 }

@@ -105,7 +105,7 @@ class EventuatePublishPlugin implements Plugin<Project> {
                                 def remoteSansSuffix = remote.replace(".git", "")
                                 connection =          "scm:git:git://github.com/${remote}"
                                 developerConnection = "scm:git:ssh://github.com:${remote}"
-                                url =                 "http://github.com/${remoteSansSuffix}/tree/master"
+                                url =                 "http://github.com/${remoteSansSuffix}/tree/${GitBranchUtil.gitBranch(project)}"
                               }
                           }
                       }

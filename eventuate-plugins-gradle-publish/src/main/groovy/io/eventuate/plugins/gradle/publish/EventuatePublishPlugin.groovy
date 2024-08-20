@@ -20,7 +20,7 @@ class EventuatePublishPlugin implements Plugin<Project> {
         rootProject.allprojects { project ->
 
             if (!GitBranchUtil.isPlatform(project)) {
-              apply plugin: 'java'
+              apply plugin: 'java-library'
               project.java {
                   withJavadocJar()
                   withSourcesJar()

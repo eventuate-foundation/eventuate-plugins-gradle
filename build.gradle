@@ -17,6 +17,14 @@ allprojects {
 
     apply plugin: "groovy"
 
+    subprojects { project ->
+        java {
+            toolchain {
+                languageVersion.set(JavaLanguageVersion.of(8));
+            }
+        }
+    }
+
     repositories {
         mavenCentral()
     }

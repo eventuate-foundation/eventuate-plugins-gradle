@@ -6,10 +6,18 @@ import org.gradle.api.Project
 class PublishMultiArchContainerImagesPlugin implements Plugin<Project> {
 
     void apply(Project rootProject) {
+      def extension = rootProject.extensions.create('publishMultiArch', PublishMultiArchContainerImagesExtension, rootProject)
+      
       def publishTask = rootProject.task("publishMultiArchContainerImages",
               type: PublishMultiArchContainerImagesTask,
               group: 'build setup',
               description: "Publish Multi-Architecture Container Images")
+      
+      publishTask.doFirst {
+        if (!extension.images.isEmpty()) {
+          publishTask.containerNames = extension.images.join(',')
+        }
+      }
     }
 
 }

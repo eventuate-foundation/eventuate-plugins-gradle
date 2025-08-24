@@ -2,13 +2,13 @@ package io.eventuate.plugins.gradle.versions
 
 import org.junit.Test
 
-import static org.junit.Assert.assertEquals
+import static org.junit.jupiter.api.Assertions.assertEquals
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when;
 
 public class GradlePropertiesFileUpgraderTest {
 
-  @Test
+  @org.junit.jupiter.api.Test
   public void shouldUpgradeFile() throws IOException {
     def inputFile = File.createTempFile("input", ".properties");
     def outputFile = File.createTempFile("output", ".properties");

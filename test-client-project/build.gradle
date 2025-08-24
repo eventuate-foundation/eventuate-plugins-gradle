@@ -8,10 +8,13 @@ subprojects {
     }
   }
 
-  sourceCompatibility = 1.8
-  targetCompatibility = 1.8
+  sourceCompatibility = 17
+  targetCompatibility = 17
 
   dependencies {
     implementation(platform("io.eventuate.plugins.gradle.testproject:test-project-bom:1.0-SNAPSHOT"))
   }
+}
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
 }

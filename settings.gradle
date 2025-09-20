@@ -1,4 +1,3 @@
 rootProject.name="eventuate-plugins-gradle"
 
-include "eventuate-plugins-gradle-versions"
 include "eventuate-plugins-gradle-publish"

@@ -12,7 +12,7 @@ class PublishEventuateDockerImagesTask extends GradleBuild {
       if (GitBranchUtil.isTrunk(branch)) {
           def version = project.version.replace("-SNAPSHOT", ".BUILD-SNAPSHOT")
           startParameter.projectProperties = ["dockerImageTag" : version, "version" : version]
-          setTasks(["publishComposeBuild", , "publishComposePush"])
+          setTasks(["publishComposeBuild", "publishComposePush"])
       } else if (branch.startsWith("wip-")) {
           def version = GitBranchUtil.getWipPublishingVersion(project)
           startParameter.projectProperties = ["dockerImageTag" : version, "version" : version]

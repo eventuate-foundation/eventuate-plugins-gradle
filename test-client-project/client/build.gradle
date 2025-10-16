@@ -2,3 +2,6 @@ dependencies {
   implementation "io.eventuate.plugins.gradle.testproject:service"
 
 }
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}

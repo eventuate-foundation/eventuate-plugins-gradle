@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: cimg/openjdk:8.0.322
+      - image: cimg/openjdk:17.0.16
     working_directory: ~/eventuate-plugins-gradle
     steps:
       - checkout

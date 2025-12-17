@@ -1,6 +1,5 @@
 package io.eventuate.plugins.gradle.publish
 
-import org.gradle.StartParameter
 import org.gradle.api.tasks.GradleBuild
 
 class PublishEventuateDockerImagesTask extends GradleBuild {

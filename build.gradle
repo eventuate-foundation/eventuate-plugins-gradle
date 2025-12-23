@@ -59,7 +59,14 @@ task buildTestClient(type: GradleBuild) {
     startParameter.projectProperties = [repoUrl: testRepoUrl]
 }
 
-check.dependsOn(buildTestClient)
+task buildTestPlatformProject(type: GradleBuild) {
+    dir = file('test-platform-project')
+    tasks = ['assemble']
+    startParameter.refreshDependencies = true
+    startParameter.projectProperties = [deployUrl: testRepoUrl]
+}
+
+check.dependsOn(buildTestClient, buildTestPlatformProject)
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }

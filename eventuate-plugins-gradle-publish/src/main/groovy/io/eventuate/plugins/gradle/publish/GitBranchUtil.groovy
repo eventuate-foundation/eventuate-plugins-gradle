@@ -11,7 +11,9 @@ class GitBranchUtil {
   }
 
   static def isPlatform(project) {
-      project.name == "eventuate-platform-dependencies" || isPlatformSubmodule(project)
+      project.name == "eventuate-platform-dependencies" || 
+        isPlatformSubmodule(project) || 
+        project.plugins.hasPlugin('java-platform')
   }
 
   static def isPlatformSubmodule(project) {

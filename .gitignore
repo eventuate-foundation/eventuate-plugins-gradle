@@ -9,3 +9,5 @@ out
 .settings
 bin
 .DS_Store
+.claude/issues
+.claude/sessions

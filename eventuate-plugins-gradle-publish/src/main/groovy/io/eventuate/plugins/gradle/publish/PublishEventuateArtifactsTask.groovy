@@ -39,7 +39,7 @@ class PublishEventuateArtifactsTask extends GradleBuild {
               // TODO deployUrl unused
 
               startParameter.projectProperties = ["version" : branch,
-                                  "deployUrl" : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"]
+                                  "deployUrl" : "https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/"]
 
 
               tasks.removeLast()

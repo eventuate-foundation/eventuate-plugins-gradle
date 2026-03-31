@@ -143,10 +143,8 @@ class EventuatePublishPlugin implements Plugin<Project> {
           rootProject.nexusPublishing {
             repositories {
                 sonatype {
-                    if (rootProject.hasProperty("nexusUrl"))
-                      nexusUrl.set(new URI(rootProject.nexusUrl))
-                    username = GitBranchUtil.getenv('OSSRH_USERNAME')
-                    password = GitBranchUtil.getenv('OSSRH_PASSWORD')
+                    nexusUrl.set(new URI("https://ossrh-staging-api.central.sonatype.com/service/local/"))
+                    snapshotRepositoryUrl.set(new URI("https://central.sonatype.com/repository/maven-snapshots/"))
                 }
             }
           }

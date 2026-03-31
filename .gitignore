@@ -1,3 +1,4 @@
+**/.hitl
 .gradle
 build/
 *.idea/
@@ -9,5 +10,3 @@ out
 .settings
 bin
 .DS_Store
-.claude/issues
-.claude/sessions

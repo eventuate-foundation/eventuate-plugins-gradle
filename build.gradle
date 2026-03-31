@@ -47,7 +47,7 @@ task deleteTestRepo(type: Delete) {
 task publishTestLibraryProject(type: GradleBuild) {
     dependsOn(deleteTestRepo)
     dir = file('test-library-project')
-    tasks = ['publish']
+    tasks = ['publishMavenPublicationToMavenRepository']
     startParameter.projectProperties = [deployUrl: testRepoUrl]
 }
 

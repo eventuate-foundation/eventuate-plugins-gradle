@@ -141,6 +141,8 @@ class EventuatePublishPlugin implements Plugin<Project> {
 
         if (release) {
           rootProject.nexusPublishing {
+            connectTimeout = Duration.ofMinutes(15)
+            clientTimeout = Duration.ofMinutes(15)
             repositories {
                 sonatype {
                     nexusUrl.set(new URI("https://ossrh-staging-api.central.sonatype.com/service/local/"))

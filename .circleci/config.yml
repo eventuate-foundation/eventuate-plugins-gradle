@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 jobs:
   build:
     docker:
@@ -26,7 +26,6 @@ jobs:
             TERM=dumb ./gradlew publishEventuateArtifacts
           when: on_success
 workflows:
-  version: 2
   build-test-and-deploy:
     jobs:
       - build:

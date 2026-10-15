@@ -16,7 +16,7 @@ class EventuatePublishPlugin implements Plugin<Project> {
         def release = GitBranchUtil.isRelease(rootProject)
 
         if (release) {
-          rootProject.plugins.apply('io.github.gradle-nexus.publish-plugin')
+          rootProject.plugins.apply('com.gradleup.nmcp.aggregation')
         }
 
         rootProject.allprojects { project ->
@@ -36,6 +36,11 @@ class EventuatePublishPlugin implements Plugin<Project> {
             }
 
             apply plugin: 'maven-publish'
+
+            if (release) {
+              apply plugin: 'com.gradleup.nmcp'
+              rootProject.dependencies.add('nmcpAggregation', rootProject.dependencies.project(path: project.path))
+            }
 
             project.publishing {
                   repositories {
@@ -142,14 +147,12 @@ class EventuatePublishPlugin implements Plugin<Project> {
         }
 
         if (release) {
-          rootProject.nexusPublishing {
-            connectTimeout = Duration.ofMinutes(15)
-            clientTimeout = Duration.ofMinutes(15)
-            repositories {
-                sonatype {
-                    nexusUrl.set(new URI("https://ossrh-staging-api.central.sonatype.com/service/local/"))
-                    snapshotRepositoryUrl.set(new URI("https://central.sonatype.com/repository/maven-snapshots/"))
-                }
+          rootProject.nmcpAggregation {
+            centralPortal {
+              username = rootProject.findProperty("sonatypeUsername")
+              password = rootProject.findProperty("sonatypePassword")
+              publishingType = "AUTOMATIC"
+              validationTimeout = Duration.ofMinutes(30)
             }
           }
         }

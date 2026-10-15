@@ -43,8 +43,7 @@ class PublishEventuateArtifactsTask extends GradleBuild {
 
 
               tasks.removeLast()
-              tasks.add("publishToSonatype")
-              tasks.add("closeAndReleaseSonatypeStagingRepository")
+              tasks.add("publishAggregationToCentralPortal")
 
               setTasks(tasks)
             } else if (bintrayRepoType != null) {

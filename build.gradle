@@ -6,7 +6,7 @@ buildscript {
         }
     }
     dependencies {
-      classpath "io.github.gradle-nexus:publish-plugin:2.0.0"
+      classpath "com.gradleup.nmcp:nmcp:1.6.2"
     }
 }
 
@@ -19,7 +19,7 @@ allprojects {
 
     java {
         toolchain {
-            languageVersion.set(JavaLanguageVersion.of(8));
+            languageVersion.set(JavaLanguageVersion.of(17));
         }
     }
 

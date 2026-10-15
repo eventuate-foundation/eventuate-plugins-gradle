@@ -40,6 +40,8 @@ class EventuatePublishPlugin implements Plugin<Project> {
             if (release) {
               apply plugin: 'com.gradleup.nmcp'
               rootProject.dependencies.add('nmcpAggregation', rootProject.dependencies.project(path: project.path))
+              // nmcp resolves its nmcp-tasks jar from the project's repositories, and generated -bom projects have none
+              project.repositories.mavenCentral()
             }
 
             project.publishing {

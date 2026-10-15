@@ -6,6 +6,8 @@ import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.credentials.AwsCredentials
 import org.gradle.api.artifacts.repositories.PasswordCredentials
 
+import java.time.Duration
+
 class EventuatePublishPlugin implements Plugin<Project> {
 
 
